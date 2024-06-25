@@ -165,6 +165,7 @@ func main() {
 			photo.Caption = formattedMessage
 			photo.ParseMode = "Markdown"
 			photo.AllowSendingWithoutReply = true
+			photo.ReplyToMessageID = selectedMessage.ID
 
 			_, err = bot.Send(photo)
 			if err != nil {
