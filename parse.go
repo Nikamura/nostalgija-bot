@@ -100,32 +100,70 @@ func main() {
 		messages_map[msg.ID] = msg
 	}
 
+	reactions_index := getReactions()
+	fmt.Println(reactions_index)
+
 	fmt.Println("Messages a year ago:", len(messages))
 
 	// find message with most replies
-	max_replies := 0
-	max_replies_id := 0
+	maxReplies := 0
+	maxRepliesId := 0
 	for id, replies := range reply_index {
-		if replies > max_replies && replies > 1 {
+		if replies > maxReplies && replies > 1 {
 			if _, ok := messages_map[id]; !ok {
 				continue
 			}
-			max_replies = replies
-			max_replies_id = id
+			maxReplies = replies
+			maxRepliesId = id
+		}
+	}
+
+	maxReactions := 0
+	maxReactionsId := 0
+	for id, reactions := range reactions_index {
+		if len(reactions) > maxReactions && len(reactions) > 1 {
+			if _, ok := messages_map[id]; !ok {
+				continue
+			}
+			maxReactions = len(reactions)
+			maxReactionsId = id
 		}
 	}
 
 	var selectedMessage Message
 
-	if max_replies_id == 0 {
+	// if not replies & reactions, select random
+	// if replies & reactions, select message with most replies with a factor of 1.5
+	// if reactions & no replies, select message with most reactions
+	var selectionType string
+
+	if maxRepliesId == 0 && maxReactionsId == 0 {
+		selectionType = "random"
+	} else if maxRepliesId == 0 && maxReactionsId != 0 {
+		selectionType = "reactions"
+	} else if maxRepliesId != 0 && maxReactionsId == 0 {
+		selectionType = "replies"
+	} else {
+		if float32(maxReplies)*float32(1.5) > float32(maxReactions) {
+			selectionType = "replies"
+		} else {
+			selectionType = "reactions"
+		}
+	}
+
+	switch selectionType {
+	case "random":
 		fmt.Println("Selecting random message")
+		fmt.Println(messages, len(messages))
 		randomMessageIndex := rand.Intn(len(messages))
 		randomMessage := messages[randomMessageIndex]
 		selectedMessage = randomMessage
-	} else {
-		fmt.Println("Selecting message with most replies with replies:", max_replies)
-		most_replies_message := messages_map[max_replies_id]
-		selectedMessage = most_replies_message
+	case "reactions":
+		fmt.Println("Selecting message with most reactions with reactions:", maxReactions)
+		selectedMessage = messages_map[maxReactionsId]
+	case "replies":
+		fmt.Println("Selecting message with most replies with replies:", maxReplies)
+		selectedMessage = messages_map[maxRepliesId]
 	}
 
 	fmt.Println("Selected message:", selectedMessage)
@@ -143,9 +181,9 @@ func main() {
 	var formattedMessage string
 
 	if selectedMessage.Text != "" {
-		formattedMessage = fmt.Sprintf("MOTD from *%s*:\n%s", selectedMessage.From, selectedMessage.Text)
+		formattedMessage = fmt.Sprintf("MOTD from *%s*:\n%s\n\nSelected based on %s", selectedMessage.From, selectedMessage.Text, selectedMessage.ReplyToMessageID)
 	} else {
-		formattedMessage = fmt.Sprintf("MOTD from *%s*", selectedMessage.From)
+		formattedMessage = fmt.Sprintf("MOTD from *%s*\n\nSelected based on %s", selectedMessage.From, selectionType)
 	}
 
 	if os.Getenv("TELEGRAM_DRY_RUN") == "true" {
