@@ -7,6 +7,7 @@ COPY go.sum ./
 RUN go mod download
 
 COPY parse.go ./
+COPY tdlib.go ./
 
 RUN go build -o /app/main
 
