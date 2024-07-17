@@ -181,7 +181,7 @@ func main() {
 	var formattedMessage string
 
 	if selectedMessage.Text != "" {
-		formattedMessage = fmt.Sprintf("MOTD from *%s*:\n%s\n\nSelected based on %s", selectedMessage.From, selectedMessage.Text, selectedMessage.ReplyToMessageID)
+		formattedMessage = fmt.Sprintf("MOTD from *%s*:\n%s\n\nSelected based on %s", selectedMessage.From, selectedMessage.Text, selectionType)
 	} else {
 		formattedMessage = fmt.Sprintf("MOTD from *%s*\n\nSelected based on %s", selectedMessage.From, selectionType)
 	}
