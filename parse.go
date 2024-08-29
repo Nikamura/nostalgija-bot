@@ -100,7 +100,11 @@ func main() {
 		messages_map[msg.ID] = msg
 	}
 
-	reactions_index := getReactions()
+	//reactions_index := getReactions()
+	reactions_index := map[int][]struct {
+		UserID   int64
+		Reaction string
+	}{}
 	fmt.Println(reactions_index)
 
 	fmt.Println("Messages a year ago:", len(messages))
