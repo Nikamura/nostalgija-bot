@@ -1,0 +1,35 @@
+{
+  "name": "nostalgija-bot",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.13.0",
+  "scripts": {
+    "configure": "tsx src/configure.ts",
+    "login": "tsx src/login.ts",
+    "start": "tsx src/main.ts",
+    "audit:ci": "pnpm audit --audit-level=high",
+    "lint": "eslint src",
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "test": "tsc -p tsconfig.test.json && vitest run --dir src"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@mtcute/node": "^0.30.1",
+    "dotenv": "^17.2.3",
+    "grammy": "^1.44.0",
+    "luxon": "^3.7.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/luxon": "^3.7.2",
+    "@types/node": "^22.19.3",
+    "eslint": "^10.7.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.64.0",
+    "vitest": "^4.0.18"
+  }
+}

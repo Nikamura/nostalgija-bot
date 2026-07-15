@@ -1,5 +1,11 @@
 .vscode/
+.DS_Store
 exports/
 sessions/
+data/
+*.session
+*.session-*
+node_modules/
+dist/
 
 .env
